@@ -70,7 +70,9 @@ class GetTokenTag:
                     lst_span = ['None'] * len(tokenized_query)
                     lst_spanId = [-1] * len(tokenized_query)
                 dct_new = {'queryId': queryId, 'query': query, 'token': tokenized_query, 'tag': lst_tag, 'span': lst_span, 'spanId': lst_spanId}
-                data_token_tag.append(dct_new)
+            else:
+                dct_new = {'queryId': queryId, 'query': query, 'token': tokenized_query, 'tag': ['O'] * len(tokenized_query), 'span': ['None'] * len(tokenized_query), 'spanId': [-1] * len(tokenized_query)}
+            data_token_tag.append(dct_new)
         return data_token_tag
             
     def _get_token_tag_predicted(self, data, tokenizer_type):
@@ -94,9 +96,14 @@ class GetTokenTag:
                     tokenized_span = Tokenizer(span, tokenizer_type).tokenized_text
                     lst = [ po for po, ch in enumerate(tokenized_query) if ch == tokenized_span[0] ]
                     # update position if not matched
-                    if dct_label['span'] != tokenized_query[offsetStart:offsetEnd]:
-                        offsetStart = tokenized_query.index(tokenized_span[0])
-                        offsetEnd = offsetStart + len(tokenized_span)
+                    #join list of tokens to string and compare with span
+
+                    if dct_label['span'].upper() != ' '.join(tokenized_query[offsetStart:offsetEnd]).upper():
+                        try:
+                            offsetStart = tokenized_query.index(tokenized_span[0])
+                            offsetEnd = offsetStart + len(tokenized_span)
+                        except:
+                            print('Error: span not found in tokenized query in queryId: ', queryId)
                     range_span = range(offsetStart, offsetEnd)
                     if (token == tokenized_span[0]) and (j in range_span):
                         tags.append('B-' + dct_label['label'])
