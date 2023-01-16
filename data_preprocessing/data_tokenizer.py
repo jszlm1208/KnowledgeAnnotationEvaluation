@@ -1,4 +1,26 @@
-from tokenizers import Tokenizer
+from transformers import AutoTokenizer
+# use word_tokenize to tokenize the text
+from nltk.tokenize import word_tokenize
+import re
 
-output = tokenizer.encode("A question: don't you think that Fatima was subjected to sorcery by this al - Taymani?")
-print(output.tokens)
+class Tokenizer:
+    # lst_char = ['.', ',', '!', '?', ';', ':', '(', ')', '[', ']', '{', '}', '/', '\\', '"', "'", '-', '_', '+', '=', '*', '&', '^', '%', '$', '#', '@', '~', '`', '<', '>', '|', ' ']
+    def __init__(self, text, tokenizer_type=['bert', 'nltk']):
+        lst_char = ['"', "'"]
+        pattern = '[' + ''.join(lst_char) + ']'
+        self.tokenizer_type = tokenizer_type
+        self.text = text
+        tokenized_text = self.tokenize_text(self.text, self.tokenizer_type)
+        self.tokenized_text = [re.sub(pattern, '', token) for token in tokenized_text]
+
+    def tokenize_text(self, text, tokenizer_type):
+        if tokenizer_type == 'bert':
+            tokenizer = AutoTokenizer.from_pretrained("bert-base-uncased")
+            tokenized_text = tokenizer.tokenize(text)
+        elif tokenizer_type == 'nltk':
+            tokenized_text = word_tokenize(text)
+        else:
+            raise ValueError('Invalid tokenizer type')
+        return tokenized_text
+
+
