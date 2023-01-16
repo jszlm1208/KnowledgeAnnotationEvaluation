@@ -14,6 +14,7 @@ def main():
     parser.add_argument('--predicted_new_file_path', type=str, default='test_data/cjo_result_newNer.json', help='path to the annotation new result file')
     parser.add_argument('--labeled_file_path', type=str, default='test_data/cjo_labeledDatapoints.jsonl', help='path to the labeled file')
     parser.add_argument('--tokenizer_type', type=str, default='nltk', help='tokenizer type, bert or nltk')
+    parser.add_argument('--output_path', type=str, default='output_data', help='save the result to output_path')
     args = parser.parse_args()
     
     data = DataGenerator(args.id2query_path, args.predicted_new_file_path, "predicted").data
@@ -55,12 +56,15 @@ def main():
         """
         lst_new = []
         for i, item in enumerate(lst_pred_old):
-            if isinstance(lst_pred_new[i], list):
-                l = len(item)
+            if isinstance(item, list):
+                l = len(lst_pred_new[i])
                 if item == lst_pred_new[i]:
-                    lst_new += [item]
+                    lst_new += item
                 else:
-                    lst_new += [item]*l
+                    lst_new += [item[0]]*l # if pred_old with multiple tags,use first one
+            elif isinstance(lst_pred_new[i], list):
+                l = len(lst_pred_new[i])
+                lst_new += [item]*l
             else:
                 lst_new.append(item)
         return lst_new
@@ -83,24 +87,18 @@ def main():
         span_new = _expand_list(dct['span'])
         spanId_new = _expand_list(dct['spanId'])
         queryId = [dct['queryId']]*len(token)
-        try:
-            tag_old = _expand_predold_by_prednew(lst_base,predicted_old[i]['tag'])
-            span_old = _expand_predold_by_prednew(lst_base,predicted_old[i]['span'])
-            spanId_old = _expand_predold_by_prednew(lst_base,predicted_old[i]['spanId'])
-            tag_labeled = _expand_list_single2multi(lst_base,labeled[i]['tag'])
-            span_labeled = _expand_list_single2multi(lst_base,labeled[i]['span'])
-            spanId_labeled = _expand_list_single2multi(lst_base,labeled[i]['spanId'])
-        except:
-            print('error for queryId: ', dct['queryId'])
+        tag_old = _expand_predold_by_prednew(lst_base,predicted_old[i]['tag'])
+        span_old = _expand_predold_by_prednew(lst_base,predicted_old[i]['span'])
+        spanId_old = _expand_predold_by_prednew(lst_base,predicted_old[i]['spanId'])
+        tag_labeled = _expand_list_single2multi(lst_base,labeled[i]['tag'])
+        span_labeled = _expand_list_single2multi(lst_base,labeled[i]['span'])
+        spanId_labeled = _expand_list_single2multi(lst_base,labeled[i]['spanId'])
+        if len(tag_new) != len(tag_old) or len(tag_new) != len(tag_labeled):
+            print("tag_new, tag_old and tag_labeled should have same length. queryiId: ", dct['queryId'])
+            print("tag_new: ", tag_new)
+            print("tag_old: ", tag_old)
+            print("tag_labeled: ", tag_labeled)    
 
-        try:
-            Tags_Labeled += tag_labeled
-        except:
-            print('error for queryId: ', dct['queryId'])
-            print('lst_base: ', lst_base)
-            print('original labeled tag: ', labeled[i]['tag'])
-        
-"""
         QueryId += queryId
         Tokens += token
         Tags_PredNew += tag_new
@@ -119,9 +117,13 @@ def main():
                         'Spans_Labeled':Spans_Labeled, 'SpansId_PredNew':SpansId_PredNew, 'SpansId_PredOld':SpansId_PredOld, 
                         'SpansId_Labeled':SpansId_Labeled})
     
-    output_file = os.path.join('output_data', 'data.csv')
+    df['OrderId'] = df.index
+    output_file = os.path.join(args.output_path, 'data.csv')
+    # check if output_path exists, if not, create it
+    if not os.path.exists(args.output_path):
+        os.makedirs(args.output_path)
     df.to_csv(output_file, index=False)
     
-"""
+
 if __name__ == '__main__':
     main()
