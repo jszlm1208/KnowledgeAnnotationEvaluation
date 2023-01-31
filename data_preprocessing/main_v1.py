@@ -4,8 +4,8 @@ import sys
 import pandas as pd
 
 # import self defined modules
-from data_generator import DataGenerator
-from get_token_tag import GetTokenTag
+from data_generator_v1 import DataGenerator
+from get_token_tag_v1 import GetTokenTag
 
 def main():
     parser = argparse.ArgumentParser()
@@ -18,11 +18,11 @@ def main():
     args = parser.parse_args()
     
     data = DataGenerator(args.id2query_path, args.predicted_new_file_path, "predicted").data
-    predicted_new = GetTokenTag(data, args.tokenizer_type).token_tag
+    predicted_new = GetTokenTag(data, 'predicted', args.tokenizer_type).token_tag
     data = DataGenerator(args.id2query_path, args.predicted_old_file_path, "predicted").data
-    predicted_old = GetTokenTag(data, args.tokenizer_type).token_tag
+    predicted_old = GetTokenTag(data, 'predicted', args.tokenizer_type).token_tag
     data = DataGenerator(args.id2query_path, args.labeled_file_path, "labeled").data
-    labeled = GetTokenTag(data, args.tokenizer_type).token_tag
+    labeled = GetTokenTag(data, 'labeled', args.tokenizer_type).token_tag
     #df_labeled = pd.DataFrame(labeled)
     #df_labeled.to_csv('output_data/labeled.csv', index=False)
 
