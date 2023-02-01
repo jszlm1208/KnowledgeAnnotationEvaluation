@@ -69,4 +69,4 @@ dependencies:
     - typing-extensions==4.4.0
     - urllib3==1.26.14
     - wasabi==0.10.1
-prefix: /home/jszlm/anaconda3/envs/env_annoevaluate
+prefix: /home/limzhan/anaconda3/envs/env_annoevaluate
