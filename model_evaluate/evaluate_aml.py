@@ -13,6 +13,7 @@ from seqeval.metrics import classification_report
 sys.path.insert(0,r'~/code/KnowledgeAnnotationEvaluation/model_evaluate/data_preprocessing/')
 from data_preprocessing.data_generator_v1 import DataGenerator
 from data_preprocessing.get_token_tag_v1 import GetTokenTag
+from get_span import get_span
 
 def build_parse_args():
     parser = argparse.ArgumentParser(description='evaluate the model')
@@ -46,112 +47,25 @@ def main():
     id2label = model.config.id2label
     label2id = {v: k for k, v in id2label.items()}
 
-    # 3. update raw_datasets to align with prediction requirement
-    raw_datasets_updated = []
-    for item in raw_datasets:
-        tokens = item['token']
-        label_ids = [label2id[label] for label in item['tag']]
-        raw_datasets_updated.append({"tokens": tokens, "label_ids": label_ids})
-
-    
-    def align_labels_with_tokens(label_ids, word_ids):
-        new_label_ids = []
-        current_word = None
-        for word_id in word_ids:
-            if word_id != current_word:
-                # Start of a new word!
-                current_word = word_id
-                label_id = -100 if word_id is None else label_ids[word_id]
-                new_label_ids.append(label_id)
-            elif word_id is None:
-                # Special token
-                new_label_ids.append(-100)
-            else:
-                # Same word as previous token
-                label_id = label_ids[word_id]
-                label = id2label[label_id]
-                # If the label is B-XXX we change it to I-XXX
-                if label.startswith("B-"):
-                    label = "I" + label[1:]
-                    label_id = label2id[label]
-                new_label_ids.append(label_id)
-
-        return new_label_ids
-    
-    def tokenize_and_align_labels(examples):
-        tokenized_inputs = tokenizer(examples["tokens"], padding=True, is_split_into_words=True)
-        label_ids = examples["label_ids"]
-        word_ids = tokenized_inputs.word_ids()
-        tokenized_inputs["labels"] = align_labels_with_tokens(label_ids, word_ids) # use "labels" to align with the key defined in the model
-        return tokenized_inputs
-        
-    # 4. get tokenized datasets for prediction
-    tokenized_datasets = []
-    output_datasets = raw_datasets.copy()
-    for i, item in enumerate(raw_datasets_updated):
-        tokenized_inputs = tokenize_and_align_labels(item)
-        input_ids = tokenized_inputs["input_ids"]
-        label_ids = tokenized_inputs["labels"]
-        output_datasets[i]['tokens_new'] = tokenized_inputs.tokens()[1:-1] #[tokenizer.decode(input_ids[i]) for i in range(1,len(input_ids)-1)]
-        # update tag
-        output_datasets[i]['tag'] = [id2label[i] for i in label_ids[1:-1]]
-        tokenized_datasets.append(tokenized_inputs)
+    texts = [ dct['query'] for dct in raw_datasets]
+    pt_batch = tokenizer(texts, padding=True, truncation=True, max_length=512, return_tensors="pt")
+    with torch.no_grad():
+        logits = model(**pt_batch).logits
+    predictions = torch.argmax(logits, axis=-1)
+    predictions = predictions.detach().cpu().clone().numpy()
 
 
-    
-    # 5. get predictions
-    data_collator = DataCollatorForTokenClassification(tokenizer=tokenizer)
-    eval_dataloader = DataLoader(tokenized_datasets, collate_fn=data_collator, batch_size=10)
-    def postprocess(predictions, labels):
-        predictions = predictions.detach().cpu().clone().numpy()
-        labels = labels.detach().cpu().clone().numpy()
-
-        # Remove ignored index (special tokens) and convert to labels
-        true_labels = [[id2label[l] for l in label if l != -100] for label in labels]
-        true_predictions = [
-            [id2label[p] for (p, l) in zip(prediction, label) if l != -100]
-            for prediction, label in zip(predictions, labels)
-        ]
-        return true_labels, true_predictions
-
-
+   
     lst_pred = []
-    lst_label = []
-    lst_pred_raw = []
-    lst_label_raw = []
-    for batch in eval_dataloader:
-        outputs = model(**batch)
-        predictions = outputs.logits.argmax(axis=-1)
-        labels = batch["labels"]
-        #print(labels)
-        true_labels, true_predictions = postprocess(predictions, labels)
-        assert len(true_predictions) == len(true_labels), "the length differs between predictions and labels"
-        lst_pred += (true_predictions)
-        lst_label += (true_labels)
-        lst_pred_raw += predictions
-        lst_label_raw += labels
+    lst_label =[]
+    for i, dct in enumerate(raw_datasets):
+        label = dct['tag']
+        pred_id = predictions[i]
+        pred = [id2label[pred_id[i]] for i in range(1,len(label)+1)]
+        lst_pred.append(pred)
+        lst_label.append(label)
     
-    """
-    # 6. add prediction result to output_datasets and save result
-    def get_span(tokens,labels):
-        spans = ['None']*len(tokens)
-        span_start = 0
-        span_end = 0
-        spans_id = [-1]*len(tokens) #save spans_id to do span count
-        for i,t in enumerate(tokens):
-            sign = 1
-            if labels[i].startswith("B-"):
-                span_start = i
-                span_end = span_start + 1
-            elif labels[i].startswith("I-"):
-                span_end += 1  
-            else:
-                sign = 0
-            if sign == 1:
-                spans[span_start:span_end] = [' '.join(tokens[span_start:span_end])]*(span_end - span_start)
-                spans_id[span_start:span_end] = [span_start]*(span_end - span_start)
-        return spans,spans_id
-    
+    output_datasets = raw_datasets.copy()
     QueryId = []
     Tokens = []
     Tokens_Old = []
@@ -163,16 +77,9 @@ def main():
     SpansId_Labeled =[]
     for i, dct in enumerate(output_datasets):
         token_old = dct['token']
-        token = dct['tokens_new']
-        # if the evaluation dataset is from converted conll format, the tokenizer may be different. If from raw data with offset position, token_old and token should be the same.
-        l_delta = len(token) - len(token_old)
-        if l_delta > 0:
-            token_old += ['None']*l_delta # make the same length
-        if len(token_old) != len(token):
-            print(f"token length diffs, QueryId: {i}")
+        token = dct['token']
         tag_pred = lst_pred[i]
         span_pred, spanId_pred = get_span(token,tag_pred)
-
         queryId = [dct['queryId']]*len(token)
         tag_labeled = dct['tag']
         if len(tag_labeled) != len(tag_pred):
@@ -189,7 +96,6 @@ def main():
         Spans_Labeled += span_labeled
         SpansId_Pred += spanId_pred
         SpansId_Labeled += spanId_labeled
-    assert len(Tags_Pred) == len(Tags_Labeled), "Tags_Pred and Tags_Labeled should have same length"
     
     
     df = pd.DataFrame({'QueryId':QueryId, 'Tokens':Tokens,'Tokens_Old':Tokens_Old, 'Tags_Pred':Tags_Pred, 'Tags_Labeled':Tags_Labeled, 
@@ -206,7 +112,6 @@ def main():
 
     print(classification_report(lst_label,lst_pred))
 
-    """
     
 
 if __name__ == '__main__':

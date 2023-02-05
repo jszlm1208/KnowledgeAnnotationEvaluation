@@ -50,8 +50,9 @@ def get_span(tokens,labels):
         span_length = 0   
     return spans,spans_id
 
+"""
 if __name__ == '__main__':
-    """
+    
     #write test cases to file
     tokens = ['▁mi', 'ke', '▁is', '▁assistant', '▁to', '▁which', '▁listed', '▁customer', '▁who', '▁graduated', '▁mit', '?', ]
     #['▁contact', 's', '▁in', '▁Paris', '▁France']
@@ -63,7 +64,7 @@ if __name__ == '__main__':
     with open('get_span_testcases.json','a') as f:
         f.write(output)
         f.write('\n')
-    """
+   
     #read test cases from file to check
     with open('get_span_testcases.json','r') as f:
         lines = f.readlines()
@@ -81,5 +82,6 @@ if __name__ == '__main__':
                 print('-----------------')
             else:
                 print('pass')
+ """
         
     

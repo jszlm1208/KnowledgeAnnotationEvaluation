@@ -1,0 +1,25 @@
+$schema: https://azuremlschemas.azureedge.net/latest/commandComponent.schema.json
+name: EvaluateModlWithLabeledData
+display_name: EvaluateModlWithLabeledData
+type: command
+inputs:
+  model_path:
+    type: uri_folder
+  data_path:
+    type: uri_file
+  tokenizer_type:
+    type: string
+    default: "local"
+    enum: ["bert", "nltk", "local"]
+
+outputs:
+  output_path:
+    type: uri_folder
+code: ./
+environment: azureml:huggingface:1
+command: >-
+  python add_token.py 
+  --model_path ${{inputs.model_path}}
+  --data_path ${{inputs.data_path}}
+  --tokenizer_type ${{inputs.tokenizer_type}}
+  --output_path ${{outputs.output_path}}
