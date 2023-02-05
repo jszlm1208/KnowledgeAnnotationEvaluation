@@ -1,3 +1,8 @@
+import os
+import sys
+import json
+import pandas as pd
+
 from transformers import AutoTokenizer
 # use word_tokenize to tokenize the text
 from nltk.tokenize import word_tokenize
@@ -11,8 +16,8 @@ class Tokenizer:
         self.tokenizer_type = tokenizer_type
         self.text = text
         self.model_path = model_path
-        tokenized_text = self.tokenize_text(self.text, self.tokenizer_type, self.model_path)
-        self.tokenized_text = [re.sub(pattern, '', token) for token in tokenized_text]
+        self.tokenized_text = self.tokenize_text(self.text, self.tokenizer_type, self.model_path)
+        #self.tokenized_text = [re.sub(pattern, '', token) for token in tokenized_text]
 
     def tokenize_text(self, text, tokenizer_type, model_path):
         if tokenizer_type == 'bert':
@@ -27,5 +32,3 @@ class Tokenizer:
         else:
             raise ValueError('Invalid tokenizer type')
         return tokenized_text
-
-
