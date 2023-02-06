@@ -1,11 +1,6 @@
 $schema: https://azuremlschemas.azureedge.net/latest/commandComponent.schema.json
 name: model_evaluate_with_labeled_data
 display_name: model_evaluate_with_labeled_data
-# version: 1b
-source:
-  git:
-    repo: https://github.com/jszlm1208/KnowledgeAnnotationEvaluation.git
-    ref: main
 type: command
 inputs:
   model_path:
@@ -21,6 +16,10 @@ outputs:
     type: uri_folder
 code: ./
 environment: azureml:env_annoevaluate
+source:
+  git:
+    repo: "https://github.com/jszlm1208/KnowledgeAnnotationEvaluation.git"
+    ref: "main"
 command: >-
   python evaluate_component.py
   --model_path ${{inputs.model_path}}
