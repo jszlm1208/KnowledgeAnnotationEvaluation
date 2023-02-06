@@ -2,6 +2,7 @@ $schema: https://azuremlschemas.azureedge.net/latest/commandComponent.schema.jso
 name: model_evaluate_with_labeled_data
 display_name: model_evaluate_with_labeled_data
 # version: 1b
+source_directory: ./
 type: command
 inputs:
   model_path:
