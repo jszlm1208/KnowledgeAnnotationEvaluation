@@ -1,0 +1,40 @@
+FROM mcr.microsoft.com/azureml/aifx/stable-ubuntu2004-cu113-py38-torch1110:monthly.202209
+
+
+# Install pip dependencies
+RUN pip install 'ipykernel~=6.0' \
+                'azureml-core==1.45.0.post1' \
+				'azureml-dataset-runtime==1.45.0' \
+                'azureml-defaults==1.45.0' \
+				'azure-ml==0.0.1' \
+				'azure-ml-component==0.9.13.post1' \
+                'azureml-mlflow==1.45.0' \
+                'azureml-telemetry==1.45.0' \
+		'azureml-contrib-services==1.45.0' \
+                'torch-tb-profiler~=0.4.0' \
+				'py-spy==0.3.12' \
+                'scikit-learn==1.2.1' \
+                'seqeval' \
+                'transformers>=4.21.0'
+
+
+RUN pip install \
+        azure-ai-ml==0.1.0b5 \
+        azureml-inference-server-http~=0.7.0 \
+        inference-schema~=1.4.2.1 \
+        MarkupSafe==2.0.1
+
+RUN pip install \
+        accelerate \
+        datasets \
+        sentencepiece \
+        rouge-score \
+        nltk \
+        py7zr \
+        torch \
+        evaluate
+
+RUN pip install protobuf==3.20.1
+RUN pip install transformers
+
+ENV DISABLE_MLFLOW_INTEGRATION=true

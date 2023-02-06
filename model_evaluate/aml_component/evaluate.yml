@@ -1,0 +1,25 @@
+$schema: https://azuremlschemas.azureedge.net/latest/commandComponent.schema.json
+name: model_evaluate_with_labeled_data
+display_name: model_evaluate_with_labeled_data
+# version: 1b
+type: command
+inputs:
+  model_path:
+    type: uri_folder
+  data_path:
+    type: uri_folder
+  tokenizer_type:
+    type: string
+    default: "local"
+
+outputs:
+  output_path:
+    type: uri_folder
+code: ./
+environment: azureml:env_annoevaluate
+command: >-
+  python evaluate_component.py
+  --model_path ${{inputs.model_path}}
+  --data_path ${{inputs.data_path}}
+  --tokenizer_type ${{inputs.tokenizer_type}}
+  --output_path ${{outputs.output_path}}

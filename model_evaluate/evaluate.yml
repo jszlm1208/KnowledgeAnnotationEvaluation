@@ -1,6 +1,6 @@
 $schema: https://azuremlschemas.azureedge.net/latest/commandComponent.schema.json
-name: EvaluateModlWithLabeledData
-display_name: EvaluateModlWithLabeledData
+name: model_evaluate_with_labeled_data
+display_name: model_evaluate_with_labeled_data
 # version: 1b
 type: command
 inputs:
@@ -11,12 +11,12 @@ inputs:
   tokenizer_type:
     type: string
     default: "local"
- 
+
 outputs:
   output_path:
     type: uri_folder
 code: ./
-environment: azureml:huggingface:1
+environment: azureml:env_annoevaluate
 command: >-
   python evaluate_component.py
   --model_path ${{inputs.model_path}}
