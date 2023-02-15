@@ -8,6 +8,7 @@ import numpy as np
 from transformers import DataCollatorForTokenClassification
 from torch.utils.data import DataLoader
 from seqeval.metrics import classification_report
+import json
 
 # import self defined modules
 sys.path.insert(0,r'~/code/KnowledgeAnnotationEvaluation/model_evaluate/data_preprocessing/')
@@ -55,7 +56,7 @@ def main():
     predictions = predictions.detach().cpu().clone().numpy()
 
 
-   
+    # 3. get the span and output the result as dataframe format
     lst_pred = []
     lst_label =[]
     for i, dct in enumerate(raw_datasets):
@@ -108,9 +109,20 @@ def main():
         os.makedirs(args.output_path)
     df.to_csv(output_file, index=False)
 
-    # 7. print the evaluation result
+    # 4. print the evaluation result
 
     print(classification_report(lst_label,lst_pred))
+
+    
+    # 5. optional: check the prediction to see if any abnormal cases and save the query to json file as test cases
+    prediction_ab = df.query('Tags_Pred != "O" and Spans_Pred == "None"')
+    lst_QueryId = [i for i in prediction_ab['QueryId']]
+    lst_QueryId = list(set(lst_QueryId))
+    with open('model_testcases.json','a') as f:
+        for i in lst_QueryId:
+            f.write(json.dumps({i:texts[int(i)]}))
+            f.write('\n') 
+    
 
     
 

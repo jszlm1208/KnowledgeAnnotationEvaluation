@@ -5,7 +5,7 @@ import pandas as pd
 import numpy as np
 import re
 
-
+#different from the v1 code, change the output format both by character
 class DataGenerator:
     """"
     This class is used to convert data output by annotation and by labeling to unified format.
