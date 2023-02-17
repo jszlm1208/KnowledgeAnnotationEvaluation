@@ -1,9 +1,3 @@
-name: env_annoevaluate
-channels:
-  - defaults
-dependencies:
-  - python=3.9
-prefix: /home/limzhan/anaconda3/envs/env_annoevaluate
 adal==1.2.7
 aiohttp==3.8.4
 aiosignal==1.3.1

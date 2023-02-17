@@ -1,6 +1,19 @@
 import re
 from pandas import json_normalize
 import json
+
+def tokens_to_query(tokens):
+    query = ""
+    lst_special = ['.', ',', '!', '?', ';',  '[', ']', '{', '}'
+                   , '\\', "'", '_', '+', '*', '&', '^', '%', '...'
+                   , '#', '@', '~', '`', '<', '>', '|', ' ', "'s", "n't"]
+    for token in tokens:
+        if token in lst_special or query=="":
+            query += token
+        else:
+            query += ' ' + token  
+    return query
+
 def get_span(tokens,labels):
     #use cases B-, I-, O-
     spans = ['None']*len(tokens)
@@ -53,7 +66,7 @@ def get_span(tokens,labels):
 """
 if __name__ == '__main__':
     
-    #write test cases to file
+    #write test cases to file for get_span function
     tokens = ['▁mi', 'ke', '▁is', '▁assistant', '▁to', '▁which', '▁listed', '▁customer', '▁who', '▁graduated', '▁mit', '?', ]
     #['▁contact', 's', '▁in', '▁Paris', '▁France']
     labels = ['B-PERSON', 'I-PERSON', 'O', 'O', 'O', 'O', 'O', 'O', 'O', 'O', 'O', 'O', ]

@@ -14,6 +14,7 @@ import json
 sys.path.insert(0,r'~/code/KnowledgeAnnotationEvaluation/model_evaluate/data_preprocessing/')
 from data_preprocessing.data_generator_v1 import DataGenerator
 from data_preprocessing.get_token_tag_v1 import GetTokenTag
+sys.path.append('../utils')
 from get_span import get_span
 
 def build_parse_args():
