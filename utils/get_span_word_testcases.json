@@ -1,0 +1,1 @@
+{"tokens": ["Tokens", "JOSE", "Eduardo", "Dutra", ",", "who", "had", "drawn", "up", "the", "Bill", "."], "labels": ["B-PERSON", "I-PERSON", "I-PERSON", "O", "O", "O", "O", "O", "O", "O", "O", "O"], "spans": ["Tokens JOSE Eduardo", "Tokens JOSE Eduardo", "Tokens JOSE Eduardo", "None", "None", "None", "None", "None", "None", "None", "None", "None"]}

@@ -28,3 +28,65 @@
 {"145": "account which is private company and AnnualRevenue larger than 100m"}
 {"658": "What customer profile lists a ttlinseconds that's at least 100?"}
 {"389": "Which customer profile lists 4254086688 as the cell phone number?"}
+{"728": "customers who work address is at 555 NE 8TH ST and work phone is 4356666888"}
+{"600": "Look up the profile of the customer who can be billed at 205 ne 32nd st."}
+{"640": "Get the customer profile that is in the city of bellevue and has a shipping address of 500 NE 4TH ST."}
+{"530": "205 ne 32nd st is the billing address of which customer?"}
+{"268": "lead Status is open and amountofbudget < 20k and Budget is Will Buy"}
+{"416": "account primaryindustry is Entertainment and capofmarket > 1000M and rev > 100M"}
+{"52": "account codeofindustry is Entertainment and MarketCapitalization > 1000M and reve > 100M"}
+{"36": "open lead with amountofbudget less than 20k and status is Will Buy"}
+{"604": "Show the customer whose shipping address is 500 NE 4TH ST in the city bellevue."}
+{"214": "Customer profile with influencer score above 70.7."}
+{"293": "Which customers have an influencerscore more than 70.7?"}
+{"658": "What customer profile lists a ttlinseconds that's at least 100?"}
+{"439": "Which customers have an exchange rate of 1.1?"}
+{"596": "customers with Record Created in last month"}
+{"333": "Which customer profile's primary phone number is 4256668888 and has the preferred name johnson?"}
+{"272": "Find the customer whose shipping address is 500 NE 4TH ST bellevue"}
+{"145": "account which is private company and AnnualRevenue larger than 100m"}
+{"490": "account Industry is Entertainment and MarketCapitalization > 1000M and AnnualRevenue > 100M"}
+{"94": "contact whose mobile phone is 4255556666"}
+{"58": "Which customer profile reflects bellevue as the msdynci_address 1 city and 500 NE 4TH ST as the shipping location?"}
+{"382": "Which customer profile can be reached via mobile @ 4254086688?"}
+{"158": "Find all customers having influencerscore of higher than 70.7."}
+{"11": "which customerprofile's that has exchangerate  as 1.1?"}
+{"123": "Find customer with Gaju as their first name"}
+{"239": "What customer has an influencer score that's over 70.7?"}
+{"353": "Which customer has an exchange rate of 1.1?"}
+{"768": "Which customer profiles have time to live as greater than or equal to 100 seconds?"}
+{"389": "Which customer profile lists 4254086688 as the cell phone number?"}
+{"324": "List the customer with first name of Gaju"}
+{"648": "Which customers have an influencer score higher than 70.7?"}
+{"239": "What customer has an influencer score that's over 70.7?"}
+{"490": "account Industry is Entertainment and MarketCapitalization > 1000M and AnnualRevenue > 100M"}
+{"604": "Show the customer whose shipping address is 500 NE 4TH ST in the city bellevue."}
+{"94": "contact whose mobile phone is 4255556666"}
+{"353": "Which customer has an exchange rate of 1.1?"}
+{"596": "customers with Record Created in last month"}
+{"728": "customers who work address is at 555 NE 8TH ST and work phone is 4356666888"}
+{"145": "account which is private company and AnnualRevenue larger than 100m"}
+{"416": "account primaryindustry is Entertainment and capofmarket > 1000M and rev > 100M"}
+{"36": "open lead with amountofbudget less than 20k and status is Will Buy"}
+{"52": "account codeofindustry is Entertainment and MarketCapitalization > 1000M and reve > 100M"}
+{"389": "Which customer profile lists 4254086688 as the cell phone number?"}
+{"158": "Find all customers having influencerscore of higher than 70.7."}
+{"333": "Which customer profile's primary phone number is 4256668888 and has the preferred name johnson?"}
+{"648": "Which customers have an influencer score higher than 70.7?"}
+{"768": "Which customer profiles have time to live as greater than or equal to 100 seconds?"}
+{"214": "Customer profile with influencer score above 70.7."}
+{"658": "What customer profile lists a ttlinseconds that's at least 100?"}
+{"58": "Which customer profile reflects bellevue as the msdynci_address 1 city and 500 NE 4TH ST as the shipping location?"}
+{"600": "Look up the profile of the customer who can be billed at 205 ne 32nd st."}
+{"123": "Find customer with Gaju as their first name"}
+{"640": "Get the customer profile that is in the city of bellevue and has a shipping address of 500 NE 4TH ST."}
+{"439": "Which customers have an exchange rate of 1.1?"}
+{"11": "which customerprofile's that has exchangerate  as 1.1?"}
+{"382": "Which customer profile can be reached via mobile @ 4254086688?"}
+{"272": "Find the customer whose shipping address is 500 NE 4TH ST bellevue"}
+{"324": "List the customer with first name of Gaju"}
+{"530": "205 ne 32nd st is the billing address of which customer?"}
+{"268": "lead Status is open and amountofbudget < 20k and Budget is Will Buy"}
+{"293": "Which customers have an influencerscore more than 70.7?"}
+{"7": "Fox initially fled from the shooting in a car, but then abandoned the car and entered dense bushland."}
+{"7": "The 53-year-old Johnson was hospitalized after experiencing dizziness."}

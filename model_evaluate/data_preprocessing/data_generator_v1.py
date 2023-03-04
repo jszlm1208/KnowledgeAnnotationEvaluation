@@ -9,12 +9,12 @@ import re
 class DataGenerator:
     """"
     This class is used to convert data output by annotation and by labeling to unified format.
-    id2query_path: file that maps query id to query, json file
+    id2query: file that maps query id to query, json file
     file_path: file that contains data output by annotation or by labeling, json file
     source: ['predicted', 'labeled'], if 'predicted', then file_path is the output of annotation, if 'labeled', then file_path is the output of labeling
     """
-    def __init__(self, id2query_path,file_path, source=['predicted', 'labeled']):
-        self.id2query = self._read_mappingfile(id2query_path)
+    def __init__(self, id2query,file_path, source=['predicted', 'labeled']):
+        self.id2query = id2query
        
         if source == 'predicted':
             self.data, self.lst_error = self._read_predictedfile(file_path)
@@ -24,15 +24,7 @@ class DataGenerator:
             raise ValueError('source should be either predicted or labeled')
 
         assert len(self.data) == len(self.id2query), "output file and id2query file should have same length"
-       
 
-    # read mapping file
-    def _read_mappingfile(self, id2query_path):
-        with open(id2query_path, 'r') as f:
-            data = json.load(f)
-        return data
-    
-     
     
     # read predicted file
     def _read_predictedfile(self, predicted_path):
@@ -96,7 +88,7 @@ class DataGenerator:
             for line in f:
                 try:
                     temp = _normalize(json.loads(line))
-                    data[int(temp['queryId'])]['label'] = temp['label'] # order the labeled results by queryId
+                    data[int(temp['queryId'])]= temp # order the labeled results by queryId
                 except:
                     lst_error.append(json.loads(line))
         return data, lst_error

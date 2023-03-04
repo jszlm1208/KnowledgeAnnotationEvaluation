@@ -24,6 +24,7 @@ def main():
     
     # load dataset
     dataset = load_dataset(args.dataset_name)
+
     
     # get the train, test, validation data
     train = dataset['train']
